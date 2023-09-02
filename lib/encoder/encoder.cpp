@@ -7,6 +7,10 @@ encoder::encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_)
 }
 
 void encoder::read() {
+      uint8_t value[SENSOR_QTY];
+      static uint8_t pre_value[SENSOR_QTY];
+      static uint8_t count[SENSOR_QTY];
+
       value[0] = pin_1.read_u16() / 256;
       value[1] = pin_2.read_u16() / 256;
       value[2] = pin_3.read_u16() / 256;
@@ -24,6 +28,7 @@ void encoder::read() {
 
       if (sampling_timer.read() > SAMPLE_CYCLE) {
             for (uint8_t i = 0; i < SENSOR_QTY; i++) {
+                  speed[i] = count[i];
                   count[i] = 0;
             }
             sampling_timer.reset();
@@ -31,17 +36,21 @@ void encoder::read() {
 }
 
 uint8_t encoder::sensor_1() {
-      return count[0];
+      return speed[0];
 }
 
 uint8_t encoder::sensor_2() {
-      return count[1];
+      return speed[1];
 }
 
 uint8_t encoder::sensor_3() {
-      return count[2];
+      return speed[2];
 }
 
 uint8_t encoder::sensor_4() {
-      return count[3];
+      return speed[3];
+}
+
+void encoder::reset_threshold(uint16_t reset_time) {
+      return;
 }

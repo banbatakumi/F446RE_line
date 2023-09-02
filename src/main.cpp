@@ -15,9 +15,13 @@ DigitalOut led_3(PC_12);
 
 // グローバル変数定義
 
+Timer uart_timer;
+
 int main() {
-      main_mcu.baud(14400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
+      main_mcu.baud(38400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
       // main_mcu.attach(main_mcu_rx, Serial::RxIrq);   // シリアル割り込み
+
+      uart_timer.start();
 
       while (1) {
             Encoder.read();
