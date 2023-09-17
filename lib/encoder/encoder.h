@@ -10,10 +10,7 @@ class encoder {
      public:
       encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_);
       void read();
-      uint8_t sensor_1();
-      uint8_t sensor_2();
-      uint8_t sensor_3();
-      uint8_t sensor_4();
+      uint8_t get(uint8_t sensor_num);
       uint8_t average();
       void reset_threshold(uint16_t reset_time = 1000);
 

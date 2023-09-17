@@ -35,20 +35,8 @@ void encoder::read() {
       }
 }
 
-uint8_t encoder::sensor_1() {
-      return speed[0];
-}
-
-uint8_t encoder::sensor_2() {
-      return speed[1];
-}
-
-uint8_t encoder::sensor_3() {
-      return speed[2];
-}
-
-uint8_t encoder::sensor_4() {
-      return speed[3];
+uint8_t encoder::get(uint8_t sensor_num) {
+      return speed[sensor_num];
 }
 
 uint8_t encoder::average() {

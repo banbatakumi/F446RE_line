@@ -22,7 +22,7 @@ uint8_t line_right_val;
 Timer uart_timer;
 
 int main() {
-      main_mcu.baud(38400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
+      main_mcu.baud(57600);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
       // main_mcu.attach(main_mcu_rx, Serial::RxIrq);   // シリアル割り込み
 
       uart_timer.start();
@@ -43,7 +43,6 @@ int main() {
             for (uint8_t i = 0; i < send_byte_num; i++) {
                   main_mcu.putc(send_byte[i]);
             }
-            wait_us(1000);
       }
 }
 
