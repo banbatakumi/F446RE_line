@@ -14,6 +14,7 @@ class encoder {
       uint8_t sensor_2();
       uint8_t sensor_3();
       uint8_t sensor_4();
+      uint8_t average();
       void reset_threshold(uint16_t reset_time = 1000);
 
      private:

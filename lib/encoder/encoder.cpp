@@ -51,6 +51,14 @@ uint8_t encoder::sensor_4() {
       return speed[3];
 }
 
+uint8_t encoder::average() {
+      uint speed_avg = 0;
+      for (int i = 0; i < 3; i++) {
+            speed_avg += speed[i] / 3;
+      }
+      return speed_avg;
+}
+
 void encoder::reset_threshold(uint16_t reset_time) {
       return;
 }

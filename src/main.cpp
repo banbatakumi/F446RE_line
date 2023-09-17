@@ -22,7 +22,7 @@ uint8_t line_right_val;
 Timer uart_timer;
 
 int main() {
-      main_mcu.baud(9600);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
+      main_mcu.baud(38400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
       // main_mcu.attach(main_mcu_rx, Serial::RxIrq);   // シリアル割り込み
 
       uart_timer.start();
@@ -31,13 +31,19 @@ int main() {
             line_left_val = line_left.read_u16() / 256;
             line_right_val = line_right.read_u16() / 256;
             Encoder.read();
-            main_mcu.putc('H');
-            main_mcu.putc(Encoder.sensor_1());
-            main_mcu.putc(Encoder.sensor_2());
-            main_mcu.putc(Encoder.sensor_3());
-            main_mcu.putc(Encoder.sensor_4());
-            main_mcu.putc(line_left_val);
-            main_mcu.putc(line_right_val);
+
+            uint8_t send_byte_num = 5;
+            uint8_t send_byte[send_byte_num];
+            send_byte[0] = 0xFF;
+            send_byte[1] = Encoder.average();
+            send_byte[2] = line_left_val;
+            send_byte[3] = line_right_val;
+            send_byte[4] = 0xAA;
+
+            for (uint8_t i = 0; i < send_byte_num; i++) {
+                  main_mcu.putc(send_byte[i]);
+            }
+            wait_us(1000);
       }
 }
 
