@@ -12,6 +12,7 @@ encoder Encoder(PC_4, PA_7, PC_3, PA_6);
 DigitalOut led_1(PC_10);
 DigitalOut led_2(PC_11);
 DigitalOut led_3(PC_12);
+DigitalOut line_led(PC_8);
 AnalogIn line_left(PC_2);
 AnalogIn line_right(PB_1);
 
@@ -28,6 +29,7 @@ int main() {
       uart_timer.start();
 
       while (1) {
+            line_led = 1;
             line_left_val = line_left.read_u16() / 256;
             line_right_val = line_right.read_u16() / 256;
             Encoder.read();
