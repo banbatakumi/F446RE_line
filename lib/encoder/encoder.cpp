@@ -2,11 +2,11 @@
 
 #include "mbed.h"
 
-encoder::encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_) : pin_1(pin_1_), pin_2(pin_2_), pin_3(pin_3_), pin_4(pin_4_) {
+Encoder::Encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_) : pin_1(pin_1_), pin_2(pin_2_), pin_3(pin_3_), pin_4(pin_4_) {
       sampling_timer.start();
 }
 
-void encoder::read() {
+void Encoder::read() {
       uint8_t value[SENSOR_QTY];
       static uint8_t pre_value[SENSOR_QTY];
       static uint8_t count[SENSOR_QTY];
@@ -35,18 +35,18 @@ void encoder::read() {
       }
 }
 
-uint8_t encoder::get(uint8_t sensor_num) {
+uint8_t Encoder::get(uint8_t sensor_num) {
       return speed[sensor_num];
 }
 
-uint8_t encoder::average() {
+uint8_t Encoder::average() {
       uint speed_avg = 0;
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < 4; i++) {
             speed_avg += speed[i] / 3;
       }
       return speed_avg;
 }
 
-void encoder::reset_threshold(uint16_t reset_time) {
+void Encoder::reset_threshold(uint16_t reset_time) {
       return;
 }

@@ -6,9 +6,9 @@
 #define SENSOR_QTY 4
 #define SAMPLE_CYCLE 0.1
 
-class encoder {
+class Encoder {
      public:
-      encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_);
+      Encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_);
       void read();
       uint8_t get(uint8_t sensor_num);
       uint8_t average();
@@ -21,7 +21,7 @@ class encoder {
       AnalogIn pin_4;
 
       uint8_t speed[SENSOR_QTY];
-      uint8_t threshold[SENSOR_QTY] = {40, 40, 40, 40};
+      uint8_t threshold[SENSOR_QTY] = {20, 35, 20, 15};
 
       Timer sampling_timer;
 };
