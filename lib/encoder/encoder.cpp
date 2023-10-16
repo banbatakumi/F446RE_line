@@ -21,7 +21,7 @@ void Encoder::read() {
                   count[i] += 1;
             }
             if (value[i] < threshold[i] && pre_value[i] >= threshold[i]) {
-                  count[i] += 1;
+                  //count[i] += 1;
             }
             pre_value[i] = value[i];
       }
@@ -42,7 +42,7 @@ uint8_t Encoder::get(uint8_t sensor_num) {
 uint8_t Encoder::average() {
       uint speed_avg = 0;
       for (int i = 0; i < 4; i++) {
-            speed_avg += speed[i] / 3;
+            speed_avg += speed[i] / 4;
       }
       return speed_avg;
 }

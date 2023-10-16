@@ -19,15 +19,13 @@ Line line(PC_2, PB_1,
 DigitalOut led1(PC_10);
 DigitalOut led2(PC_11);
 DigitalOut led3(PC_12);
-PwmOut lineLed(PC_8);
+DigitalOut lineLed(PC_8);
 
 // グローバル変数定義
 
 int main() {
-      mainMcu.baud(19200);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
+      mainMcu.baud(57600);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
       // main_mcu.attach(main_mcu_rx, Serial::RxIrq);   // シリアル割り込み
-
-      lineLed.period_us(50);
 
       line.SetTh();
 
@@ -36,13 +34,16 @@ int main() {
             line.Read();
             encoder.read();
 
-            uint8_t send_byte_num = 5;
+            uint8_t send_byte_num = 8;
             uint8_t send_byte[send_byte_num];
             send_byte[0] = 0xFF;
-            send_byte[1] = encoder.average();
-            send_byte[2] = line.IsLeft();
-            send_byte[3] = line.IsRight();
-            send_byte[4] = 0xAA;
+            send_byte[1] = encoder.get(0);
+            send_byte[2] = line.WhiteNum();
+            send_byte[3] = line.IsLeft();
+            send_byte[4] = line.IsRight();
+            send_byte[5] = line.LineVector() > 0 ? line.LineVector() : 0;
+            send_byte[6] = line.LineVector() < 0 ? line.LineVector() * -1 : 0;
+            send_byte[7] = 0xAA;
 
             for (uint8_t i = 0; i < send_byte_num; i++) {
                   mainMcu.putc(send_byte[i]);

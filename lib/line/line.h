@@ -5,6 +5,8 @@
 #include "mbed.h"
 #include "sin_cos_table.h"
 
+#define PI 3.1415926535   // 円周率
+
 #define LINE_QTY 24
 #define SET_TH_NUM 100
 #define TH_VALUE 5
@@ -20,6 +22,7 @@ class Line {
       void SetTh();
       uint8_t IsLeft();
       uint8_t IsRight();
+      uint8_t WhiteNum();
       int16_t LineVector();
 
      private:

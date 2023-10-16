@@ -21,7 +21,7 @@ class Encoder {
       AnalogIn pin_4;
 
       uint8_t speed[SENSOR_QTY];
-      uint8_t threshold[SENSOR_QTY] = {20, 35, 20, 15};
+      uint8_t threshold[SENSOR_QTY] = {15, 25, 15, 15};
 
       Timer sampling_timer;
 };
