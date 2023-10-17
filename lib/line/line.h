@@ -3,13 +3,14 @@
 
 #include "approximate_atan2.h"
 #include "mbed.h"
+#include "simplify_deg.h"
 #include "sin_cos_table.h"
 
 #define PI 3.1415926535   // 円周率
 
 #define LINE_QTY 24
 #define SET_TH_NUM 100
-#define TH_VALUE 5
+#define TH_VALUE 10
 
 class Line {
      public:

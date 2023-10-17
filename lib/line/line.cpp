@@ -144,7 +144,7 @@ uint8_t Line::IsRight() {
       return is_right_white;
 }
 
-uint8_t Line::WhiteNum(){
+uint8_t Line::WhiteNum() {
       uint8_t white_sum;
       for (uint8_t i = 0; i < LINE_QTY; i++) {   // 全てのセンサのベクトルを合成
             white_sum += is_white[i];
