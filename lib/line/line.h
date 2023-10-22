@@ -9,7 +9,7 @@
 #define PI 3.1415926535   // 円周率
 
 #define LINE_QTY 24
-#define SET_TH_NUM 100
+#define SET_TH_NUM 1000
 #define TH_VALUE 10
 
 class Line {
