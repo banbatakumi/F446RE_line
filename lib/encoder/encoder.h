@@ -4,7 +4,7 @@
 #include "mbed.h"
 
 #define SENSOR_QTY 4
-#define SAMPLE_CYCLE 0.1
+#define SAMPLE_CYCLE 0.05
 
 class Encoder {
      public:

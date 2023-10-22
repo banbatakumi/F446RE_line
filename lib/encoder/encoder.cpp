@@ -21,7 +21,7 @@ void Encoder::read() {
                   count[i] += 1;
             }
             if (value[i] < threshold[i] && pre_value[i] >= threshold[i]) {
-                  //count[i] += 1;
+                  count[i] += 1;
             }
             pre_value[i] = value[i];
       }

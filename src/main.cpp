@@ -51,16 +51,19 @@ int main() {
 
 void MainMcu() {
       // 受信
-      uint8_t send_byte_num = 8;
+      uint8_t send_byte_num = 11;
       uint8_t send_byte[send_byte_num];
       send_byte[0] = 0xFF;
-      send_byte[1] = encoder.average();
-      send_byte[2] = line.WhiteNum();
-      send_byte[3] = line.IsLeft();
-      send_byte[4] = line.IsRight();
-      send_byte[5] = line.LineVector() > 0 ? line.LineVector() : 0;
-      send_byte[6] = line.LineVector() < 0 ? line.LineVector() * -1 : 0;
-      send_byte[7] = 0xAA;
+      send_byte[1] = encoder.get(0);
+      send_byte[2] = encoder.get(1);
+      send_byte[3] = encoder.get(2);
+      send_byte[4] = encoder.get(3);
+      send_byte[5] = line.WhiteNum();
+      send_byte[6] = line.IsLeft();
+      send_byte[7] = line.IsRight();
+      send_byte[8] = line.LineVector() > 0 ? line.LineVector() : 0;
+      send_byte[9] = line.LineVector() < 0 ? line.LineVector() * -1 : 0;
+      send_byte[10] = 0xAA;
 
       for (uint8_t i = 0; i < send_byte_num; i++) {
             mainSerial.putc(send_byte[i]);
