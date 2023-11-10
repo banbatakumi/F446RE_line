@@ -2,6 +2,8 @@
 #include "line.h"
 #include "mbed.h"
 
+#define SendTime(baud_, byte_num_) 1 / baud_ * 10 * byte_num_ * 1000000
+
 // UART通信定義
 RawSerial mainSerial(PC_6, PC_7);   // TX, RX
 
@@ -24,7 +26,6 @@ uint8_t mode = 0;
 
 void setup() {
       mainSerial.baud(115200);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
-      // mainSerial.attach(MainMcu);   // シリアル割り込み
 
       lineLed = 0;
       wait_us(10000);
@@ -51,23 +52,27 @@ int main() {
 
 void MainMcu() {
       // 受信
-      uint8_t send_byte_num = 11;
+      uint8_t send_byte_num = 14;
       uint8_t send_byte[send_byte_num];
       send_byte[0] = 0xFF;
       send_byte[1] = encoder.get(0);
       send_byte[2] = encoder.get(1);
       send_byte[3] = encoder.get(2);
       send_byte[4] = encoder.get(3);
-      send_byte[5] = line.WhiteNum();
-      send_byte[6] = line.IsLeft();
-      send_byte[7] = line.IsRight();
-      send_byte[8] = line.LineVector() > 0 ? line.LineVector() : 0;
-      send_byte[9] = line.LineVector() < 0 ? line.LineVector() * -1 : 0;
-      send_byte[10] = 0xAA;
+      send_byte[5] = line.Interval();
+      send_byte[6] = line.WhiteQTY();
+      send_byte[7] = line.IsLeft();
+      send_byte[8] = line.IsRight();
+      send_byte[9] = line.Vector() > 0 ? line.Vector() : 0;
+      send_byte[10] = line.Vector() < 0 ? line.Vector() * -1 : 0;
+      send_byte[11] = line.InsideDir() > 0 ? line.InsideDir() : 0;
+      send_byte[12] = line.InsideDir() < 0 ? line.InsideDir() * -1 : 0;
+      send_byte[13] = 0xAA;
 
       for (uint8_t i = 0; i < send_byte_num; i++) {
             mainSerial.putc(send_byte[i]);
       }
+      wait_us(SendTime(115200, send_byte_num));
 
       // 送信
       if (mainSerial.readable()) mode = mainSerial.getc();

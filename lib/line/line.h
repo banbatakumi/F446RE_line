@@ -10,7 +10,7 @@
 
 #define LINE_QTY 24
 #define SET_TH_NUM 2500
-#define TH_VALUE 10
+#define TH_VALUE 5
 
 class Line {
      public:
@@ -23,8 +23,11 @@ class Line {
       void SetTh();
       uint8_t IsLeft();
       uint8_t IsRight();
-      uint8_t WhiteNum();
-      int16_t LineVector();
+      uint8_t WhiteQTY();
+      int16_t Vector();
+      uint8_t Interval();
+      int16_t InsideDir();
+      bool IsOnWhite();
 
      private:
       AnalogIn left;
@@ -55,6 +58,9 @@ class Line {
 
       float unit_vector_x[LINE_QTY];
       float unit_vector_y[LINE_QTY];
+
+      Timer whiteOnTimer;
+      Timer dirDifferenceTimer;
 };
 
 #endif

@@ -14,6 +14,8 @@ Line::Line(PinName left_, PinName right_, PinName mux1a_, PinName mux1b_, PinNam
             unit_vector_x[i] = MyCos(i * 360.00000 / LINE_QTY);
             unit_vector_y[i] = MySin(i * 360.00000 / LINE_QTY);
       }
+
+      dirDifferenceTimer.start();
 }
 
 void Line::Read() {
@@ -122,7 +124,7 @@ void Line::SetTh() {
       }
 }
 
-int16_t Line::LineVector() {
+int16_t Line::Vector() {
       float result_vector_x = 0;
       float result_vector_y = 0;
       int16_t degree;
@@ -136,18 +138,96 @@ int16_t Line::LineVector() {
       return degree;
 }
 
+uint8_t Line::Interval() {
+      uint8_t white_qty = WhiteQTY();
+      uint8_t pos_white_num[white_qty];
+      uint8_t white_num = 0;
+
+      for (uint8_t i = 0; i < LINE_QTY; i++) {
+            if (is_white[i]) {
+                  pos_white_num[white_num] = i;
+                  white_num++;
+            }
+      }
+
+      uint8_t interval[white_qty];
+      for (uint8_t i = 0; i < white_qty - 1; i++) {
+            interval[i] = pos_white_num[i + 1] - pos_white_num[i];
+      }
+      interval[white_qty - 1] = pos_white_num[0] - pos_white_num[white_qty - 1] + LINE_QTY;
+
+      uint8_t max_interval = 0;
+      for (uint8_t i = 0; i < white_qty; i++) {
+            if (interval[i] > 12) interval[i] = 24 - interval[i];
+            if (max_interval < interval[i]) {
+                  max_interval = interval[i];
+            }
+      }
+
+      return max_interval;
+}
+
+int16_t Line::InsideDir() {
+      int16_t line_dir = Vector();
+      bool is_on_white = IsOnWhite();
+      int16_t inside_dir;
+      static int16_t pre_line_dir;
+      static bool pre_is_on_white;
+      static bool is_half_out;
+
+      if (dirDifferenceTimer.read_ms() > 50) {
+            if (pre_is_on_white == 1) {
+                  int16_t dir_difference = abs(line_dir - pre_line_dir);
+                  if (dir_difference > 180) dir_difference = 360 - dir_difference;
+                  if (dir_difference > 100) is_half_out = 1 - is_half_out;
+            }
+
+            if (is_on_white == 0) is_half_out = 0;
+
+            pre_line_dir = line_dir;
+            pre_is_on_white = is_on_white;
+            dirDifferenceTimer.reset();
+      }
+
+
+      if (is_half_out) {
+            inside_dir = line_dir;
+      } else {
+            inside_dir = SimplifyDeg(line_dir + 180);
+      }
+
+
+      return SimplifyDeg(inside_dir);
+}
+
+uint8_t Line::WhiteQTY() {
+      uint8_t white_qty = 0;
+      for (uint8_t i = 0; i < LINE_QTY; i++) {   // 全てのセンサのベクトルを合成
+            white_qty += is_white[i];
+      }
+      return white_qty;
+}
+
+bool Line::IsOnWhite() {
+      static bool is_on_white;
+
+      if (WhiteQTY() > 0) {
+            whiteOnTimer.start();
+            whiteOnTimer.reset();
+            is_on_white = 1;
+      }
+      if (whiteOnTimer.read_ms() > 100) {
+            whiteOnTimer.stop();
+            whiteOnTimer.reset();
+            is_on_white = 0;
+      }
+      return is_on_white;
+}
+
 uint8_t Line::IsLeft() {
       return is_left_white;
 }
 
 uint8_t Line::IsRight() {
       return is_right_white;
-}
-
-uint8_t Line::WhiteNum() {
-      uint8_t white_sum;
-      for (uint8_t i = 0; i < LINE_QTY; i++) {   // 全てのセンサのベクトルを合成
-            white_sum += is_white[i];
-      }
-      return white_sum;
 }
