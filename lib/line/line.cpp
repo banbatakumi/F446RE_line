@@ -174,28 +174,30 @@ int16_t Line::InsideDir() {
       static int16_t pre_line_dir;
       static bool pre_is_on_white;
       static bool is_half_out;
+      static bool decide_pre_line_dir;
 
-      if (dirDifferenceTimer.read_ms() > 50) {
-            if (pre_is_on_white == 1) {
-                  int16_t dir_difference = abs(line_dir - pre_line_dir);
-                  if (dir_difference > 180) dir_difference = 360 - dir_difference;
-                  if (dir_difference > 100) is_half_out = 1 - is_half_out;
-            }
-
-            if (is_on_white == 0) is_half_out = 0;
-
-            pre_line_dir = line_dir;
-            pre_is_on_white = is_on_white;
-            dirDifferenceTimer.reset();
+      if (pre_is_on_white == 1) {
+            int16_t dir_difference = abs(line_dir - pre_line_dir);
+            if (dir_difference > 180) dir_difference = 360 - dir_difference;
+            is_half_out = 0;
+            if (dir_difference > 120) is_half_out = 1;
       }
 
+      if (is_on_white == 0) is_half_out = 0;
+
+      if (pre_is_on_white == 0) decide_pre_line_dir = 1;
+      if(decide_pre_line_dir == 1){
+            pre_line_dir = line_dir;
+            if (Interval() > 10) decide_pre_line_dir = 0;
+      }
+
+      pre_is_on_white = is_on_white;
 
       if (is_half_out) {
             inside_dir = line_dir;
       } else {
             inside_dir = SimplifyDeg(line_dir + 180);
       }
-
 
       return SimplifyDeg(inside_dir);
 }

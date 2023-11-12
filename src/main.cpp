@@ -22,7 +22,7 @@ DigitalOut led[3] = {PC_10, PC_11, PC_12};
 DigitalOut lineLed(PC_8);
 
 // グローバル変数定義
-uint8_t mode = 0;
+uint8_t do_led_on = 0;
 
 void setup() {
       mainSerial.baud(115200);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
@@ -37,7 +37,7 @@ void setup() {
 int main() {
       setup();
       while (1) {
-            if (mode != 0) {
+            if (do_led_on != 0) {
                   lineLed = 0;
             } else {
                   lineLed = 1;
@@ -52,7 +52,7 @@ int main() {
 
 void MainMcu() {
       // 受信
-      uint8_t send_byte_num = 14;
+      const uint8_t send_byte_num = 14;
       uint8_t send_byte[send_byte_num];
       send_byte[0] = 0xFF;
       send_byte[1] = encoder.get(0);
@@ -75,5 +75,5 @@ void MainMcu() {
       wait_us(SendTime(115200, send_byte_num));
 
       // 送信
-      if (mainSerial.readable()) mode = mainSerial.getc();
+      if (mainSerial.readable()) do_led_on = mainSerial.getc();
 }
