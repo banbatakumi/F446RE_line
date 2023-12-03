@@ -25,7 +25,7 @@ DigitalOut lineLed(PC_8);
 uint8_t do_led_on = 0;
 
 void setup() {
-      mainSerial.baud(115200);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
+      mainSerial.baud(230400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
 
       lineLed = 0;
       wait_us(10000);

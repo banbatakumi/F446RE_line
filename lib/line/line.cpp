@@ -186,7 +186,7 @@ int16_t Line::InsideDir() {
       if (is_on_white == 0) is_half_out = 0;
 
       if (pre_is_on_white == 0) decide_pre_line_dir = 1;
-      if(decide_pre_line_dir == 1){
+      if (decide_pre_line_dir == 1) {
             pre_line_dir = line_dir;
             if (Interval() > 10) decide_pre_line_dir = 0;
       }
