@@ -139,7 +139,7 @@ int16_t Line::Vector() {
 }
 
 uint8_t Line::Interval() {
-      uint8_t white_qty = WhiteQTY();
+      const uint8_t white_qty = WhiteQTY();
       uint8_t pos_white_num[white_qty];
       uint8_t white_num = 0;
 
