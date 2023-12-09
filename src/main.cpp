@@ -2,8 +2,6 @@
 #include "line.h"
 #include "mbed.h"
 
-#define SendTime(baud_, byte_num_) 1 / baud_ * 10 * byte_num_ * 1000000
-
 // UART通信定義
 RawSerial mainSerial(PC_6, PC_7);   // TX, RX
 
@@ -26,12 +24,12 @@ uint8_t do_led_on = 0;
 
 void setup() {
       mainSerial.baud(230400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
-
-      lineLed = 0;
-      wait_us(10000);
-      line.SetTh();
-      lineLed = 1;
-      wait_us(10000);
+      
+            lineLed = 0;
+            wait_us(10000);
+            line.SetTh();
+            lineLed = 1;
+            wait_us(10000);
 }
 
 int main() {
@@ -72,7 +70,6 @@ void MainMcu() {
       for (uint8_t i = 0; i < send_byte_num; i++) {
             mainSerial.putc(send_byte[i]);
       }
-      wait_us(SendTime(115200, send_byte_num));
 
       // 送信
       if (mainSerial.readable()) do_led_on = mainSerial.getc();

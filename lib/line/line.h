@@ -9,8 +9,8 @@
 #define PI 3.1415926535   // 円周率
 
 #define LINE_QTY 24
-#define SET_TH_NUM 2500
-#define TH_VALUE 5
+#define SET_TH_NUM 5000
+#define TH_VALUE 3
 
 class Line {
      public:
@@ -28,6 +28,7 @@ class Line {
       uint8_t Interval();
       int16_t InsideDir();
       bool IsOnWhite();
+      bool is_white[LINE_QTY];
 
      private:
       AnalogIn left;
@@ -47,7 +48,6 @@ class Line {
 
       uint8_t val[LINE_QTY];
       uint16_t th_val[LINE_QTY];
-      bool is_white[LINE_QTY];
 
       uint8_t left_val;
       uint8_t right_val;
