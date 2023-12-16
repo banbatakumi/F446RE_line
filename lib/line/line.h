@@ -20,15 +20,17 @@ class Line {
            PinName mux3a_, PinName mux3b_, PinName mux3x_, PinName mux3y_);
 
       void Read();
+      void Compute();
       void SetTh();
       uint8_t IsLeft();
       uint8_t IsRight();
-      uint8_t WhiteQTY();
-      int16_t Vector();
-      uint8_t Interval();
-      int16_t InsideDir();
-      bool IsOnWhite();
+
       bool is_white[LINE_QTY];
+
+      uint8_t white_qty;
+      uint8_t max_interval;
+      int16_t dir;
+      int16_t inside_dir;
 
      private:
       AnalogIn left;
@@ -56,10 +58,13 @@ class Line {
       bool is_left_white;
       bool is_right_white;
 
+      bool is_half_out;
+      int16_t pre_dir;
+      bool pre_white_qty;
+
       float unit_vector_x[LINE_QTY];
       float unit_vector_y[LINE_QTY];
 
-      Timer whiteOnTimer;
       Timer dirDifferenceTimer;
 };
 

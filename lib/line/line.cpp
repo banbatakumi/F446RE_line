@@ -103,7 +103,6 @@ void Line::SetTh() {
       for (uint16_t i = 0; i < LINE_QTY; i++) {
             th_val[i] = 0;
       }
-
       for (uint16_t i = 0; i < SET_TH_NUM; i++) {
             Read();
             left_th_val += left_val;
@@ -124,106 +123,72 @@ void Line::SetTh() {
       }
 }
 
-int16_t Line::Vector() {
-      float result_vector_x = 0;
-      float result_vector_y = 0;
-      int16_t degree;
-
-      for (uint8_t i = 0; i < LINE_QTY; i++) {   // 全てのセンサのベクトルを合成
-            result_vector_x += is_white[i] * unit_vector_x[i];
-            result_vector_y += is_white[i] * unit_vector_y[i];
-      }
-
-      degree = atan2(result_vector_y, result_vector_x) * 180.00 / PI;
-      return degree;
-}
-
-uint8_t Line::Interval() {
-      const uint8_t white_qty = WhiteQTY();
-      uint8_t pos_white_num[white_qty];
-      uint8_t white_num = 0;
-
+void Line::Compute() {
+      // 反応してるライン
+      white_qty = 0;
       for (uint8_t i = 0; i < LINE_QTY; i++) {
-            if (is_white[i]) {
-                  pos_white_num[white_num] = i;
-                  white_num++;
-            }
-      }
-
-      uint8_t interval[white_qty];
-      for (uint8_t i = 0; i < white_qty - 1; i++) {
-            interval[i] = pos_white_num[i + 1] - pos_white_num[i];
-      }
-      interval[white_qty - 1] = pos_white_num[0] - pos_white_num[white_qty - 1] + LINE_QTY;
-
-      uint8_t max_interval = 0;
-      for (uint8_t i = 0; i < white_qty; i++) {
-            if (interval[i] > 12) interval[i] = 24 - interval[i];
-            if (max_interval < interval[i]) {
-                  max_interval = interval[i];
-            }
-      }
-
-      return max_interval;
-}
-
-int16_t Line::InsideDir() {
-      int16_t line_dir = Vector();
-      bool is_on_white = IsOnWhite();
-      int16_t inside_dir;
-      static int16_t pre_line_dir;
-      static bool pre_is_on_white;
-      static bool is_half_out;
-      static bool decide_pre_line_dir;
-
-      if (pre_is_on_white == 1) {
-            int16_t dir_difference = abs(line_dir - pre_line_dir);
-            if (dir_difference > 180) dir_difference = 360 - dir_difference;
-            is_half_out = 0;
-            if (dir_difference > 120) is_half_out = 1;
-      }
-
-      if (is_on_white == 0) is_half_out = 0;
-
-      if (pre_is_on_white == 0) decide_pre_line_dir = 1;
-      if (decide_pre_line_dir == 1) {
-            pre_line_dir = line_dir;
-            if (Interval() > 10) decide_pre_line_dir = 0;
-      }
-
-      pre_is_on_white = is_on_white;
-
-      if (is_half_out) {
-            inside_dir = line_dir;
-      } else {
-            inside_dir = SimplifyDeg(line_dir + 180);
-      }
-
-      return SimplifyDeg(inside_dir);
-}
-
-uint8_t Line::WhiteQTY() {
-      uint8_t white_qty = 0;
-      for (uint8_t i = 0; i < LINE_QTY; i++) {   // 全てのセンサのベクトルを合成
             white_qty += is_white[i];
       }
-      return white_qty;
-}
 
-bool Line::IsOnWhite() {
-      static bool is_on_white;
+      if (white_qty != 0) {
+            // ラインの間隔
+            uint8_t pos_white_num[white_qty];
+            uint8_t white_num = 0;
 
-      if (WhiteQTY() > 0) {
-            whiteOnTimer.start();
-            whiteOnTimer.reset();
-            is_on_white = 1;
+            for (uint8_t i = 0; i < LINE_QTY; i++) {
+                  if (is_white[i]) {
+                        pos_white_num[white_num] = i;
+                        white_num++;
+                  }
+            }
+
+            uint8_t interval[white_qty];
+            for (uint8_t i = 0; i < white_qty - 1; i++) {
+                  interval[i] = pos_white_num[i + 1] - pos_white_num[i];
+            }
+            interval[white_qty - 1] = pos_white_num[0] - pos_white_num[white_qty - 1] + LINE_QTY;
+
+            // ラインの最大の間隔
+            max_interval = 0;
+            uint8_t pos_max_interval = 0;
+            for (uint8_t i = 0; i < white_qty; i++) {
+                  if (max_interval < interval[i]) {
+                        max_interval = interval[i];
+                        pos_max_interval = i;
+                  }
+            }
+
+            // ラインの方向
+            float line_dir_num = pos_white_num[pos_max_interval] + max_interval * 0.5;
+            dir = SimplifyDeg((line_dir_num / LINE_QTY * 360) + 180);
+
+            if (max_interval > 12) max_interval = 24 - max_interval;   // 間隔を１２までにする
+
+            // ラインから戻る方向
+
+            if (pre_white_qty != 0) {
+                  int16_t dir_difference = abs(dir - pre_dir);
+                  if (dir_difference > 180) dir_difference = 360 - dir_difference;
+                  if (dir_difference > 120) is_half_out = 1 - is_half_out;
+            }
+
+            pre_dir = dir;
+            pre_white_qty = white_qty;
+
+            if (is_half_out) {
+                  inside_dir = dir;
+            } else {
+                  inside_dir = SimplifyDeg(dir + 180);
+            }
+      } else {
+            is_half_out = 0;
+            max_interval = 0;
+            dir = 0;
+            inside_dir = 180;
+
+            pre_dir = 0;
+            pre_white_qty = 0;
       }
-      if (whiteOnTimer.read_ms() > 100) {
-            whiteOnTimer.stop();
-            whiteOnTimer.reset();
-            is_on_white = 0;
-      }
-      return is_on_white;
 }
 
 uint8_t Line::IsLeft() {

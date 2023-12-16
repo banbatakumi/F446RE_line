@@ -24,12 +24,12 @@ uint8_t do_led_on = 0;
 
 void setup() {
       mainSerial.baud(230400);   // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
-      
-            lineLed = 0;
-            wait_us(10000);
-            line.SetTh();
-            lineLed = 1;
-            wait_us(10000);
+
+      lineLed = 0;
+      wait_us(10000);
+      line.SetTh();
+      lineLed = 1;
+      wait_us(10000);
 }
 
 int main() {
@@ -44,6 +44,7 @@ int main() {
             line.Read();
             encoder.read();
 
+            line.Compute();
             MainMcu();
       }
 }
@@ -57,14 +58,14 @@ void MainMcu() {
       send_byte[2] = encoder.get(1);
       send_byte[3] = encoder.get(2);
       send_byte[4] = encoder.get(3);
-      send_byte[5] = line.Interval();
-      send_byte[6] = line.WhiteQTY();
+      send_byte[5] = line.max_interval;
+      send_byte[6] = line.white_qty;
       send_byte[7] = line.IsLeft();
       send_byte[8] = line.IsRight();
-      send_byte[9] = line.Vector() > 0 ? line.Vector() : 0;
-      send_byte[10] = line.Vector() < 0 ? line.Vector() * -1 : 0;
-      send_byte[11] = line.InsideDir() > 0 ? line.InsideDir() : 0;
-      send_byte[12] = line.InsideDir() < 0 ? line.InsideDir() * -1 : 0;
+      send_byte[9] = line.dir > 0 ? line.dir : 0;
+      send_byte[10] = line.dir < 0 ? line.dir * -1 : 0;
+      send_byte[11] = line.inside_dir > 0 ? line.inside_dir : 0;
+      send_byte[12] = line.inside_dir < 0 ? line.inside_dir * -1 : 0;
       send_byte[13] = 0xAA;
 
       for (uint8_t i = 0; i < send_byte_num; i++) {
