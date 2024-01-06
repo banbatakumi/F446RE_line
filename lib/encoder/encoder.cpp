@@ -3,13 +3,20 @@
 #include "mbed.h"
 
 Encoder::Encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_) : pin_1(pin_1_), pin_2(pin_2_), pin_3(pin_3_), pin_4(pin_4_) {
-      sampling_timer.start();
+      readTicker.attach(mbed::callback(this, &Encoder::GetVal), SAMPLE_CYCLE);
 }
 
-void Encoder::read() {
+void Encoder::GetVal() {
+      for (uint8_t i = 0; i < SENSOR_QTY; i++) {
+            speed[i] = count[i];
+            if (speed[i] > MAX_SPEED) speed[i] = MAX_SPEED;
+            count[i] = 0;
+      }
+}
+
+void Encoder::Read() {
       uint8_t val[SENSOR_QTY];
       static uint8_t pre_val[SENSOR_QTY];
-      static uint8_t count[SENSOR_QTY];
 
       val[0] = pin_1.read_u16() / 256;
       val[1] = pin_2.read_u16() / 256;
@@ -32,28 +39,8 @@ void Encoder::read() {
             }
             pre_val[i] = val[i];
       }
-
-      if (sampling_timer.read() > SAMPLE_CYCLE) {
-            for (uint8_t i = 0; i < SENSOR_QTY; i++) {
-                  speed[i] = count[i];
-                  count[i] = 0;
-            }
-            sampling_timer.reset();
-      }
 }
 
-uint8_t Encoder::get(uint8_t sensor_num) {
+uint8_t Encoder::GetSpeed(uint8_t sensor_num) {
       return speed[sensor_num];
-}
-
-uint8_t Encoder::average() {
-      uint speed_avg = 0;
-      for (int i = 0; i < 4; i++) {
-            speed_avg += speed[i] / 4;
-      }
-      return speed_avg;
-}
-
-void Encoder::reset_threshold(uint16_t reset_time) {
-      return;
 }

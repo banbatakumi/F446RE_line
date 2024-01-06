@@ -191,10 +191,16 @@ void Line::Compute() {
       }
 }
 
-uint8_t Line::IsLeft() {
+bool Line::IsLeft() {
       return is_left_white;
 }
 
-uint8_t Line::IsRight() {
+bool Line::IsRight() {
       return is_right_white;
+}
+
+bool Line::IsOnLine() {
+      bool is_on_line = 0;
+      if (white_qty > 0) is_on_line = 1;
+      return is_on_line;
 }

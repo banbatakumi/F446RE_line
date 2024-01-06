@@ -22,8 +22,9 @@ class Line {
       void Read();
       void Compute();
       void SetTh();
-      uint8_t IsLeft();
-      uint8_t IsRight();
+      bool IsLeft();
+      bool IsRight();
+      bool IsOnLine();
 
       bool is_white[LINE_QTY];
 
