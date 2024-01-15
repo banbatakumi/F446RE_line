@@ -3,7 +3,7 @@
 #include "mbed.h"
 
 // UART通信定義
-RawSerial mainSerial(PC_6, PC_7);   // TX, RX
+UnbufferedSerial mainSerial(PC_6, PC_7);   // TX, RX
 
 // 関数定義
 void MainMcu();
@@ -61,11 +61,8 @@ void MainMcu() {
       send_byte[5] = line.dir / 2 + 90;
       send_byte[6] = line.inside_dir / 2 + 90;
       send_byte[7] = 0xAA;
-
-      for (uint8_t i = 0; i < send_byte_num; i++) {
-            mainSerial.putc(send_byte[i]);
-      }
+      mainSerial.write(&send_byte, send_byte_num);
 
       // 受信
-      if (mainSerial.readable()) do_led_on = mainSerial.getc();
+      mainSerial.read(&do_led_on, 1);
 }

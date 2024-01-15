@@ -1,7 +1,6 @@
 #ifndef MBED_LINE_H
 #define MBED_LINE_H
 
-#include "approximate_atan2.h"
 #include "mbed.h"
 #include "simplify_deg.h"
 #include "sin_cos_table.h"
