@@ -4,7 +4,7 @@
 #include "mbed.h"
 
 #define SENSOR_QTY 4
-#define SAMPLE_CYCLE 0.05
+#define SAMPLE_CYCLE 0.04f
 #define MAX_SPEED 15
 class Encoder {
      public:
@@ -21,6 +21,7 @@ class Encoder {
 
       uint8_t speed[SENSOR_QTY];
       uint8_t threshold[SENSOR_QTY];
+      uint8_t min_val[SENSOR_QTY] = {255, 255, 255, 255};
       uint8_t max_val[SENSOR_QTY];
       uint8_t count[SENSOR_QTY];
 

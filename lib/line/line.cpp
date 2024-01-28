@@ -10,7 +10,7 @@ Line::Line(PinName left_, PinName right_, PinName mux1a_, PinName mux1b_, PinNam
       mux3a = 0;
       mux3b = 0;
 
-      for (uint8_t i = 0; i < LINE_QTY; i++) {   // それぞれのセンサにベクトルを与える
+      for (uint8_t i = 0; i < LINE_QTY; i++) {  // それぞれのセンサにベクトルを与える
             unit_vector_x[i] = MyCos(i * 360.00000 / LINE_QTY);
             unit_vector_y[i] = MySin(i * 360.00000 / LINE_QTY);
       }
@@ -28,7 +28,7 @@ void Line::Read() {
       mux2b = 0;
       mux3a = 0;
       mux3b = 0;
-      wait_us(5);
+      wait_us(2);
       val[22] = mux1x.read_u16() / 256;
       val[19] = mux1y.read_u16() / 256;
       val[15] = mux2x.read_u16() / 256;
@@ -42,7 +42,7 @@ void Line::Read() {
       mux2b = 0;
       mux3a = 1;
       mux3b = 0;
-      wait_us(5);
+      wait_us(2);
       val[21] = mux1x.read_u16() / 256;
       val[16] = mux1y.read_u16() / 256;
       val[14] = mux2x.read_u16() / 256;
@@ -56,7 +56,7 @@ void Line::Read() {
       mux2b = 1;
       mux3a = 0;
       mux3b = 1;
-      wait_us(5);
+      wait_us(2);
       val[20] = mux1x.read_u16() / 256;
       val[18] = mux1y.read_u16() / 256;
       val[13] = mux2x.read_u16() / 256;
@@ -70,7 +70,7 @@ void Line::Read() {
       mux2b = 1;
       mux3a = 1;
       mux3b = 1;
-      wait_us(5);
+      wait_us(2);
       val[23] = mux1x.read_u16() / 256;
       val[17] = mux1y.read_u16() / 256;
       val[12] = mux2x.read_u16() / 256;
@@ -162,7 +162,7 @@ void Line::Compute() {
             float line_dir_num = pos_white_num[pos_max_interval] + max_interval * 0.5;
             dir = SimplifyDeg((line_dir_num / LINE_QTY * 360) + 180);
 
-            if (max_interval > 12) max_interval = 24 - max_interval;   // 間隔を１２までにする
+            if (max_interval > 12) max_interval = 24 - max_interval;  // 間隔を１２までにする
 
             // ラインから戻る方向
 

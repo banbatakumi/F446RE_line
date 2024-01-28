@@ -24,10 +24,9 @@ void Encoder::Read() {
       val[3] = pin_4.read_u16() / 256;
 
       for (uint8_t i = 0; i < SENSOR_QTY; i++) {
-            if (max_val[i] < val[i]) {
-                  max_val[i] = val[i];
-                  threshold[i] = max_val[i] - 10;
-            }
+            if (max_val[i] < val[i]) max_val[i] = val[i];
+            if (min_val[i] > val[i]) min_val[i] = val[i];
+            threshold[i] = (max_val[i] + min_val[i]) / 2;
       }
 
       for (uint8_t i = 0; i < SENSOR_QTY; i++) {
