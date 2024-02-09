@@ -3,13 +3,14 @@
 
 #include "mbed.h"
 #include "simplify_deg.h"
-#include "sin_cos_table.h"
 
-#define PI 3.1415926535   // 円周率
+#define PI 3.1415926535  // 円周率
 
 #define LINE_QTY 24
 #define SET_TH_NUM 5000
 #define TH_VALUE 3
+
+#define readms(timer_name_) chrono::duration_cast<chrono::milliseconds>((timer_name_).elapsed_time()).count()
 
 class Line {
      public:
@@ -61,11 +62,6 @@ class Line {
       bool is_half_out;
       int16_t pre_dir;
       bool pre_white_qty;
-
-      float unit_vector_x[LINE_QTY];
-      float unit_vector_y[LINE_QTY];
-
-      Timer dirDifferenceTimer;
 };
 
 #endif

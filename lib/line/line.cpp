@@ -9,13 +9,6 @@ Line::Line(PinName left_, PinName right_, PinName mux1a_, PinName mux1b_, PinNam
       mux2b = 0;
       mux3a = 0;
       mux3b = 0;
-
-      for (uint8_t i = 0; i < LINE_QTY; i++) {  // それぞれのセンサにベクトルを与える
-            unit_vector_x[i] = MyCos(i * 360.00000 / LINE_QTY);
-            unit_vector_y[i] = MySin(i * 360.00000 / LINE_QTY);
-      }
-
-      dirDifferenceTimer.start();
 }
 
 void Line::Read() {
