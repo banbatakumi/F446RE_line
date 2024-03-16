@@ -12,6 +12,7 @@ Line::Line(PinName left_, PinName right_, PinName mux1a_, PinName mux1b_, PinNam
 }
 
 void Line::Read() {
+      // アナログ値の取得
       left_val = left.read_u16() / 256;
       right_val = right.read_u16() / 256;
 
@@ -71,6 +72,7 @@ void Line::Read() {
       val[7] = mux3x.read_u16() / 256;
       val[1] = mux3y.read_u16() / 256;
 
+      // それぞれのセンサが反応しているかの判定
       if (left_val > left_th_val) {
             is_left_white = 1;
       } else {
@@ -158,7 +160,6 @@ void Line::Compute() {
             if (max_interval > 12) max_interval = 24 - max_interval;  // 間隔を１２までにする
 
             // ラインから戻る方向
-
             if (pre_white_qty != 0) {
                   int16_t dir_difference = abs(dir - pre_dir);
                   if (dir_difference > 180) dir_difference = 360 - dir_difference;

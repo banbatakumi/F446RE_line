@@ -8,14 +8,12 @@ UnbufferedSerial mainSerial(PC_6, PC_7);  // TX, RX
 // 関数定義
 void MainMcu();
 
-Encoder encoder(PC_4, PA_7, PC_3, PA_6);
-
-Line line(PC_2, PB_1,
-          PB_7, PB_9, PC_0, PC_1,
-          PA_4, PA_5, PA_2, PA_3,
-          PB_12, PB_13, PC_5, PB_0);
-
 // ピン定義
+Encoder encoder(PC_4, PA_7, PC_3, PA_6);
+Line line(PC_2, PB_1,                 // 左右についてるライン
+          PB_7, PB_9, PC_0, PC_1,     //
+          PA_4, PA_5, PA_2, PA_3,     // エンジェルライン
+          PB_12, PB_13, PC_5, PB_0);  //
 DigitalOut led[3] = {PC_10, PC_11, PC_12};
 DigitalOut lineLed(PC_8);
 
@@ -27,7 +25,7 @@ void setup() {
 
       lineLed = 0;
       wait_us(10000);
-      line.SetTh();
+      line.SetTh();  // ラインの閾値自動設定
       lineLed = 1;
       wait_us(10000);
 }
@@ -45,7 +43,8 @@ int main() {
             encoder.Read();
 
             line.Compute();
-            MainMcu();
+
+            MainMcu();  // UART
       }
 }
 
