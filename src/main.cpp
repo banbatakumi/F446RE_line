@@ -24,10 +24,10 @@ void setup() {
       mainSerial.baud(230400);  // 通信速度: 9600, 14400, 19200, 28800, 38400, 57600, 115200
 
       lineLed = 0;
-      wait_us(10000);
+      wait_us(100);
       line.SetTh();  // ラインの閾値自動設定
       lineLed = 1;
-      wait_us(10000);
+      wait_us(100);
 }
 
 int main() {
@@ -40,9 +40,8 @@ int main() {
             }
 
             line.Read();
-            encoder.Read();
-
             line.Compute();
+            encoder.Read();
 
             MainMcu();  // UART
       }
