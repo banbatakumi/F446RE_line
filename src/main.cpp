@@ -34,13 +34,13 @@ int main() {
       setup();
       while (1) {
             if (do_led_on != 0) {
-                  lineLed = 0;
+                  lineLed = 0;  // ラインのLEDをつける
+                  line.Read();
+                  line.Compute();
             } else {
-                  lineLed = 1;
+                  lineLed = 1;  // ラインのLEDを消す
             }
 
-            line.Read();
-            line.Compute();
             encoder.Read();
 
             MainMcu();  // UART

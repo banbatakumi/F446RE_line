@@ -13,76 +13,79 @@ Line::Line(PinName left_, PinName right_, PinName mux1a_, PinName mux1b_, PinNam
 
 void Line::Read() {
       // アナログ値の取得
-      left_val = left.read_u16();
-      right_val = right.read_u16();
-
-      mux1a = 0;
-      mux1b = 0;
-      mux2a = 0;
-      mux2b = 0;
-      mux3a = 0;
-      mux3b = 0;
-      wait_us(1);
-      val[22] = mux1x.read_u16();
-      val[19] = mux1y.read_u16();
-      val[15] = mux2x.read_u16();
-      val[11] = mux2y.read_u16();
-      val[2] = mux3x.read_u16();
-      val[5] = mux3y.read_u16();
-
-      mux1a = 1;
-      mux1b = 0;
-      mux2a = 1;
-      mux2b = 0;
-      mux3a = 1;
-      mux3b = 0;
-      wait_us(1);
-      val[21] = mux1x.read_u16();
-      val[16] = mux1y.read_u16();
-      val[14] = mux2x.read_u16();
-      val[8] = mux2y.read_u16();
-      val[3] = mux3x.read_u16();
-      val[0] = mux3y.read_u16();
-
-      mux1a = 0;
-      mux1b = 1;
-      mux2a = 0;
-      mux2b = 1;
-      mux3a = 0;
-      mux3b = 1;
-      wait_us(1);
-      val[20] = mux1x.read_u16();
-      val[18] = mux1y.read_u16();
-      val[13] = mux2x.read_u16();
-      val[10] = mux2y.read_u16();
-      val[6] = mux3x.read_u16();
-      val[4] = mux3y.read_u16();
-
-      mux1a = 1;
-      mux1b = 1;
-      mux2a = 1;
-      mux2b = 1;
-      mux3a = 1;
-      mux3b = 1;
-      wait_us(1);
-      val[23] = mux1x.read_u16();
-      val[17] = mux1y.read_u16();
-      val[12] = mux2x.read_u16();
-      val[9] = mux2y.read_u16();
-      val[7] = mux3x.read_u16();
-      val[1] = mux3y.read_u16();
+      if (read_sensors_group == 0) {
+            left_val = left.read_u16();
+            right_val = right.read_u16();
+            if (left_val > left_th_val) {
+                  is_left_white = 1;
+            } else {
+                  is_left_white = 0;
+            }
+            if (right_val > right_th_val) {
+                  is_right_white = 1;
+            } else {
+                  is_right_white = 0;
+            }
+            read_sensors_group++;
+      } else if (read_sensors_group == 1) {
+            mux1a = 0;
+            mux1b = 0;
+            mux2a = 0;
+            mux2b = 0;
+            mux3a = 0;
+            mux3b = 0;
+            val[22] = mux1x.read_u16();
+            val[19] = mux1y.read_u16();
+            val[15] = mux2x.read_u16();
+            val[11] = mux2y.read_u16();
+            val[2] = mux3x.read_u16();
+            val[5] = mux3y.read_u16();
+            read_sensors_group++;
+      } else if (read_sensors_group == 2) {
+            mux1a = 1;
+            mux1b = 0;
+            mux2a = 1;
+            mux2b = 0;
+            mux3a = 1;
+            mux3b = 0;
+            val[21] = mux1x.read_u16();
+            val[16] = mux1y.read_u16();
+            val[14] = mux2x.read_u16();
+            val[8] = mux2y.read_u16();
+            val[3] = mux3x.read_u16();
+            val[0] = mux3y.read_u16();
+            read_sensors_group++;
+      } else if (read_sensors_group == 3) {
+            mux1a = 0;
+            mux1b = 1;
+            mux2a = 0;
+            mux2b = 1;
+            mux3a = 0;
+            mux3b = 1;
+            val[20] = mux1x.read_u16();
+            val[18] = mux1y.read_u16();
+            val[13] = mux2x.read_u16();
+            val[10] = mux2y.read_u16();
+            val[6] = mux3x.read_u16();
+            val[4] = mux3y.read_u16();
+            read_sensors_group++;
+      } else if (read_sensors_group == 4) {
+            mux1a = 1;
+            mux1b = 1;
+            mux2a = 1;
+            mux2b = 1;
+            mux3a = 1;
+            mux3b = 1;
+            val[23] = mux1x.read_u16();
+            val[17] = mux1y.read_u16();
+            val[12] = mux2x.read_u16();
+            val[9] = mux2y.read_u16();
+            val[7] = mux3x.read_u16();
+            val[1] = mux3y.read_u16();
+            read_sensors_group = 0;
+      }
 
       // それぞれのセンサが反応しているかの判定
-      if (left_val > left_th_val) {
-            is_left_white = 1;
-      } else {
-            is_left_white = 0;
-      }
-      if (right_val > right_th_val) {
-            is_right_white = 1;
-      } else {
-            is_right_white = 0;
-      }
       for (uint16_t i = 0; i < LINE_QTY; i++) {
             if (val[i] > th_val[i]) {
                   is_white[i] = 1;

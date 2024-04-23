@@ -7,8 +7,8 @@
 #define PI 3.1415926535  // 円周率
 
 #define LINE_QTY 24
-#define SET_TH_NUM 1000
-#define TH_VALUE 400
+#define SET_TH_NUM 5000
+#define TH_VALUE 500
 
 #define readms(timer_name_) chrono::duration_cast<chrono::milliseconds>((timer_name_).elapsed_time()).count()
 
@@ -48,6 +48,8 @@ class Line {
       DigitalOut mux3b;
       AnalogIn mux3x;
       AnalogIn mux3y;
+
+      uint8_t read_sensors_group = 0;
 
       uint16_t val[LINE_QTY];
       uint32_t th_val[LINE_QTY];

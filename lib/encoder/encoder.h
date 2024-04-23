@@ -6,6 +6,8 @@
 #define SENSOR_QTY 4
 #define SAMPLE_CYCLE 40ms
 #define MAX_SPEED 15
+
+#define readms(timer_name_) chrono::duration_cast<chrono::milliseconds>((timer_name_).elapsed_time()).count()
 class Encoder {
      public:
       Encoder(PinName pin_1_, PinName pin_2_, PinName pin_3_, PinName pin_4_);
@@ -26,6 +28,7 @@ class Encoder {
       uint8_t count[SENSOR_QTY];
 
       Ticker readTicker;
+      Timer dt;
 };
 
 #endif
