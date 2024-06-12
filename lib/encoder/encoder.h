@@ -4,7 +4,7 @@
 #include "mbed.h"
 
 #define SENSOR_QTY 4
-#define SAMPLE_CYCLE 40ms
+#define SAMPLE_CYCLE 20ms
 #define MAX_SPEED 15
 
 #define readms(timer_name_) chrono::duration_cast<chrono::milliseconds>((timer_name_).elapsed_time()).count()
