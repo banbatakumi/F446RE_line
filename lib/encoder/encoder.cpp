@@ -19,16 +19,16 @@ void Encoder::Read() {
       static uint8_t pre_val[SENSOR_QTY];
 
       // エンコーダーの値を取得
-      val[0] = pin_1.read_u16() / 256;
-      val[1] = pin_2.read_u16() / 256;
-      val[2] = pin_3.read_u16() / 256;
-      val[3] = pin_4.read_u16() / 256;
+      val[0] = pin_1.read_u16() * 0.00390625;
+      val[1] = pin_2.read_u16() * 0.00390625;
+      val[2] = pin_3.read_u16() * 0.00390625;
+      val[3] = pin_4.read_u16() * 0.00390625;
 
       // 閾値の自動調整
       for (uint8_t i = 0; i < SENSOR_QTY; i++) {
             if (max_val[i] < val[i]) max_val[i] = val[i];
             if (min_val[i] > val[i]) min_val[i] = val[i];
-            threshold[i] = (max_val[i] + min_val[i]) / 2;
+            threshold[i] = (max_val[i] + min_val[i]) * 0.5;
       }
 
       // 色が変わったらカウント

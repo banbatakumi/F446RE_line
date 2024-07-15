@@ -8,7 +8,7 @@
 
 #define LINE_QTY 24
 #define SET_TH_NUM 5000
-#define TH_VALUE 500
+#define TH_VALUE 750
 
 #define readms(timer_name_) chrono::duration_cast<chrono::milliseconds>((timer_name_).elapsed_time()).count()
 
